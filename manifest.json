@@ -1,0 +1,11 @@
+{
+    "display_name": "POV Rewrite",
+    "requires": [],
+    "optional": [],
+    "js": "index.js",
+    "css": "styles.css",
+    "author": "spaceman2408",
+    "version": "1.0.0",
+    "auto_update": true,
+    "homePage": "https://github.com/spaceman2408/pov-rewrite"
+}

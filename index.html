@@ -1,0 +1,89 @@
+<div id="pov-rewrite-settings" class="extension_settings">
+  <div class="inline-drawer">
+    <div class="inline-drawer-toggle inline-drawer-header">
+      <b>POV Rewrite</b>
+      <div class="inline-drawer-icon fa-solid fa-circle-chevron-down"></div>
+    </div>
+    <div class="inline-drawer-content">
+      <!-- Enable Toggle -->
+      <hr class="pov-rewrite-enabled">
+      <div class="flex-container">
+        <label class="checkbox_label" for="pov-rewrite-enabled">
+          <input type="checkbox" id="pov-rewrite-enabled" />
+          <span>Enable Extension</span>
+        </label>
+      </div>
+
+      <!-- Prompt Template Editor -->
+      <hr class="sysHR" style="margin: 10px 0;" />
+      <div class="marginBot5">
+        <label for="pov-rewrite-prompt">
+          <small><b>Prompt Template:</b></small>
+        </label>
+        <textarea id="pov-rewrite-prompt" class="text_pole textarea_compact" rows="8"></textarea>
+        <div class="extensions_warning">
+          <small><strong>REQUIRED:</strong> Use {{CHARACTER_JSON}} placeholder for character data</small>
+          <br />
+          <small><strong>REQUIRED:</strong> Use {{FIELDS_LIST}} placeholder for fields to rewrite</small>
+        </div>
+      </div>
+
+      <!-- Response Length -->
+      <hr class="sysHR" style="margin: 10px 0;" />
+      <div class="flex-container marginBot5">
+        <label for="pov-rewrite-tokens">
+          <small><b>Max Response Tokens:</b></small>
+        </label>
+        <input type="number" id="pov-rewrite-tokens" class="text_pole" value="4000" min="1000" max="16000" />
+      </div>
+
+      <!-- Show Preview Toggle -->
+      <hr class="sysHR" style="margin: 10px 0;" />
+      <div class="flex-container marginBot5">
+        <label class="checkbox_label" for="pov-rewrite-preview">
+          <input type="checkbox" id="pov-rewrite-preview" />
+          <span>Show Preview Before Applying</span>
+        </label>
+      </div>
+
+      <!-- Field Selection Section -->
+      <hr class="sysHR" style="margin: 10px 0;" />
+      <div class="marginBot5">
+        <small><b>Fields to Rewrite:</b></small>
+        <div class="pov-rewrite-field-toggles">
+          <label class="checkbox_label" for="pov-rewrite-field-description">
+            <input type="checkbox" id="pov-rewrite-field-description" />
+            <span>Description</span>
+          </label>
+          <label class="checkbox_label" for="pov-rewrite-field-personality">
+            <input type="checkbox" id="pov-rewrite-field-personality" />
+            <span>Personality</span>
+          </label>
+          <label class="checkbox_label" for="pov-rewrite-field-first_mes">
+            <input type="checkbox" id="pov-rewrite-field-first_mes" />
+            <span>First Message</span>
+          </label>
+          <label class="checkbox_label" for="pov-rewrite-field-mes_example">
+            <input type="checkbox" id="pov-rewrite-field-mes_example" />
+            <span>Example Messages</span>
+          </label>
+          <label class="checkbox_label" for="pov-rewrite-field-alternate_greetings">
+            <input type="checkbox" id="pov-rewrite-field-alternate_greetings" />
+            <span>Alternate Greetings</span>
+          </label>
+        </div>
+        <div class="pov-rewrite-field-actions">
+          <button id="pov-rewrite-select-all" class="menu_button" style="margin-right: 5px;">Select All</button>
+          <button id="pov-rewrite-deselect-all" class="menu_button">Deselect All</button>
+        </div>
+      </div>
+
+      <hr class="sysHR" style="margin: 5px 0;" />
+      <p class="extensions_warning">
+        <small>
+          <strong>Tip:</strong> The rewrite button appears next to the delete button in the character edit panel.
+        </small>
+      </p>
+    </div>
+  </div>
+</div>
