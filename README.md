@@ -1,4 +1,9 @@
-# POV Rewrite Extension for SillyTavern
+# NOTE
+While you are free to use this extension however you see fit, I made this for personal use so it may be buggy or not work for you. At the moment it's not something I plan to release officially, but if you do use it and find issues you can reach out to me. Otherwise, feel free to fork and modify it as needed.
+
+> This extension is a little buggy and experimental, use at your own risk. I'm still working out some kinks.
+
+## POV Rewrite Extension for SillyTavern
 
 Convert character cards to first-person perspective using AI.
 
