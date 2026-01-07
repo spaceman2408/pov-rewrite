@@ -1,5 +1,5 @@
 import { extension_settings, getContext } from "../../../extensions.js";
-import { saveSettingsDebounced, generateRaw } from "../../../../script.js";
+import { saveSettingsDebounced, generateRaw, setExternalAbortController } from "../../../../script.js";
 import { Popup, POPUP_TYPE, POPUP_RESULT } from "../../../popup.js";
 
 // Global abort controller for stopping generation
@@ -61,6 +61,9 @@ window.povRewriteStartClick = async function(event) {
         const characterData = getCharacterData(character);
         const prompt = buildRewritePrompt(characterData);
         
+        // Set the external abort controller so SillyTavern can use it
+        setExternalAbortController(abortController);
+        
         // Call AI
         const response = await generateRaw({
             prompt: prompt,
@@ -83,11 +86,16 @@ window.povRewriteStartClick = async function(event) {
     } catch (error) {
         console.error(`[${extensionName}] Error rewriting character:`, error);
         
-        // Check if aborted
-        if (abortController === null || error.message === 'Operation aborted') {
+        // Clear the external abort controller
+        setExternalAbortController(null);
+        
+        // Check if aborted (AbortError has name 'AbortError' and type 'aborted')
+        if (error.name === 'AbortError' || error.type === 'aborted' || abortController === null) {
+            console.log(`[${extensionName}] Generation was aborted`);
             toastr.info("Rewrite aborted by user");
             if (statusEl) statusEl.innerHTML = '<i class="fa-solid fa-times-circle"></i><span>Rewrite aborted</span>';
         } else {
+            console.error(`[${extensionName}] Generation failed with error:`, error);
             toastr.error("Error: " + error.message);
             if (statusEl) statusEl.innerHTML = '<i class="fa-solid fa-exclamation-circle"></i><span>Error: ' + escapeHtml(error.message) + '</span>';
         }
@@ -102,7 +110,17 @@ window.povRewriteAbortClick = function(event) {
     console.log(`[${extensionName}] Abort button clicked via inline handler`);
     
     if (abortController) {
-        abortController = null; // Signal that we want to abort
+        console.log(`[${extensionName}] Sending abort signal...`);
+        
+        // Actually abort the request
+        abortController.abort();
+        
+        // Clear the external abort controller in SillyTavern
+        setExternalAbortController(null);
+        
+        // Clear the controller reference
+        abortController = null;
+        
         console.log(`[${extensionName}] Abort signal sent, resetting UI state`);
         
         // Reset UI state immediately
