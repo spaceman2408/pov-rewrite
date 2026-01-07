@@ -5,6 +5,9 @@ import { Popup, POPUP_TYPE, POPUP_RESULT } from "../../../popup.js";
 // Global abort controller for stopping generation
 let abortController = null;
 
+// Global reference to the rewrite popup so we can close it after completion
+let rewritePopup = null;
+
 // Global function to reset UI state
 window.povRewriteResetUI = function() {
     const startBtn = document.getElementById('pov-rewrite-start-btn');
@@ -433,7 +436,7 @@ async function rewriteCharacterCard() {
         `;
 
         // Create and show popup
-        const rewritePopup = new Popup(popupHtml, POPUP_TYPE.TEXT, '', {
+        rewritePopup = new Popup(popupHtml, POPUP_TYPE.TEXT, '', {
             wide: true,
             large: true,
             allowVerticalScrolling: true,
@@ -450,6 +453,10 @@ async function rewriteCharacterCard() {
             // Reset abort controller if it was set
             abortController = null;
         }
+        
+        // If user completed rewrite successfully, close the popup automatically
+        // The popup will be closed via the Popup class's built-in cleanup mechanism
+        // when the Start Rewrite button completes the process
     
     } catch (error) {
         console.error(`[${extensionName}] Error opening rewrite popup:`, error);
@@ -1007,8 +1014,11 @@ async function showPreviewDialog(rewrittenData, character) {
         toastr.success("Character card rewritten to first-person perspective!");
         console.log(`[${extensionName}] Rewrite completed successfully`);
         
-        // Popup will close automatically through the Popup class's built-in cleanup
-        // This ensures proper focus restoration and event handler cleanup
+        // Close the initial rewrite popup if it's still open
+        if (rewritePopup && rewritePopup.dlg && rewritePopup.dlg.hasAttribute('open')) {
+            console.log(`[${extensionName}] Closing initial rewrite popup...`);
+            await rewritePopup.completeAffirmative();
+        }
     } else {
         console.log(`[${extensionName}] User cancelled preview`);
         // Reset UI state
