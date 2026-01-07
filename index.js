@@ -147,7 +147,6 @@ Character Card JSON:
 
 Return ONLY a valid JSON object with the rewritten fields. Do not include any explanations or additional text.`,
     maxTokens: 4000,
-    showPreview: true,
     fields: {
         description: true,
         personality: true,
@@ -218,11 +217,6 @@ async function addSettingsUI() {
         $("#pov-rewrite-tokens").on("change", function () {
             const value = $(this).val();
             extension_settings[extensionName].maxTokens = parseInt(String(value), 10);
-            saveSettingsDebounced();
-        });
-
-        $("#pov-rewrite-preview").on("change", function () {
-            extension_settings[extensionName].showPreview = !!$(this).prop("checked");
             saveSettingsDebounced();
         });
 
@@ -305,11 +299,6 @@ function loadSettings() {
     $("#pov-rewrite-tokens").val(
         extension_settings[extensionName].maxTokens
     );
-    $("#pov-rewrite-preview").prop(
-        "checked",
-        extension_settings[extensionName].showPreview
-    );
-    
     // Load field toggle settings with backward compatibility
     const fields = extension_settings[extensionName].fields || defaultSettings.fields;
     $("#pov-rewrite-field-description").prop("checked", fields.description);
@@ -876,18 +865,16 @@ async function handleAIResponse(response, currentCharacter) {
         // Restore placeholders in AI response
         rewrittenData = restorePlaceholdersInResponse(rewrittenData, currentCharacter);
 
-        // Show preview if enabled
-        if (extension_settings[extensionName].showPreview) {
-            const confirmed = await showPreviewDialog(rewrittenData, currentCharacter);
-            if (!confirmed) {
-                console.log(`[${extensionName}] User cancelled rewrite`);
-                // Reset UI state
-                window.povRewriteResetUI();
-                return;
-            }
-            // If confirmed, showPreviewDialog handles everything (closing popup, updating, saving)
+        // Always show preview
+        const confirmed = await showPreviewDialog(rewrittenData, currentCharacter);
+        if (!confirmed) {
+            console.log(`[${extensionName}] User cancelled rewrite`);
+            // Reset UI state
+            window.povRewriteResetUI();
             return;
         }
+        // If confirmed, showPreviewDialog handles everything (closing popup, updating, saving)
+        return;
 
         console.log(`[${extensionName}] Updating character with rewritten data...`);
         
